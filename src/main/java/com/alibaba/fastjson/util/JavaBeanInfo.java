@@ -181,7 +181,7 @@ public class JavaBeanInfo {
             , boolean fieldBased //
             , boolean compatibleWithJavaBean
     ) {
-        JSONType jsonType = clazz.getAnnotation(JSONType.class);
+        JSONType jsonType = TypeUtils.getAnnotation(clazz,JSONType.class);
 
         Class<?> builderClass = getBuilderClass(clazz, jsonType);
 
@@ -192,7 +192,7 @@ public class JavaBeanInfo {
         Constructor[] constructors = clazz.getDeclaredConstructors();
 
         Constructor<?> defaultConstructor = null;
-        if (!kotlin) {
+        if ((!kotlin) || constructors.length == 1) {
             if (builderClass == null) {
                 defaultConstructor = getDefaultConstructor(clazz, constructors);
             } else {
