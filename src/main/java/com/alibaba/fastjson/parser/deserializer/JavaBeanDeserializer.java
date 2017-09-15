@@ -414,12 +414,13 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
                         lexer.nextToken();
                         return null;
                     }
+
                     if (beanInfo.jsonType != null) {
                         for (Class<?> seeAlsoClass : beanInfo.jsonType.seeAlso()) {
                             if (Enum.class.isAssignableFrom(seeAlsoClass)) {
                                 try {
-                                    Enum<?> e = Enum.valueOf((Class<Enum>)seeAlsoClass, strVal);
-                                    return (T)e;
+                                    Enum<?> e = Enum.valueOf((Class<Enum>) seeAlsoClass, strVal);
+                                    return (T) e;
                                 } catch (IllegalArgumentException e) {
                                     // skip
                                 }
