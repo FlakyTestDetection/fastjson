@@ -892,37 +892,26 @@ public class ParserConfig {
         final long BASIC = 0xcbf29ce484222325L;
         final long PRIME = 0x100000001b3L;
 
-        long h = BASIC;
-        h ^= className.charAt(0);
-        h *= PRIME;
-        h ^= className.charAt(className.length() - 1);
-        h *= PRIME;
-        if (h == 0x9198507b5af98f0L) {
+        if ((((BASIC
+                ^ className.charAt(0))
+                * PRIME)
+                ^ className.charAt(className.length() - 1))
+                * PRIME == 0x9198507b5af98f0L)
+        {
             className = className.substring(1, className.length() - 1);
         }
-        
-        long hash3 = BASIC;
-        {
-            char c = className.charAt(0);
-            hash3 ^= c;
-            hash3 *= PRIME;
-        }
-        {
-            char c = className.charAt(1);
-            hash3 ^= c;
-            hash3 *= PRIME;
-        }
-        {
-            char c = className.charAt(2);
-            hash3 ^= c;
-            hash3 *= PRIME;
-        }
+
+        final long h3 = (((((BASIC ^ className.charAt(0))
+                * PRIME)
+                ^ className.charAt(1))
+                * PRIME)
+                ^ className.charAt(2))
+                * PRIME;
 
         if (autoTypeSupport || expectClass != null) {
-            long hash = hash3;
+            long hash = h3;
             for (int i = 3; i < className.length(); ++i) {
-                char c = className.charAt(i);
-                hash ^= c;
+                hash ^= className.charAt(i);
                 hash *= PRIME;
                 if (Arrays.binarySearch(acceptHashCodes, hash) >= 0) {
                     clazz = TypeUtils.loadClass(typeName, defaultClassLoader, false);
@@ -955,7 +944,7 @@ public class ParserConfig {
         }
 
         if (!autoTypeSupport) {
-            long hash = hash3;
+            long hash = h3;
             for (int i = 3; i < className.length(); ++i) {
                 char c = className.charAt(i);
                 hash ^= c;
